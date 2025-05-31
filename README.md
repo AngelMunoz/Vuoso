@@ -1,14 +1,7 @@
-# app
+# Vue Bindings for Fable
 
-This template should help get you started developing with Vue 3 in Vite.
-
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
+This project offers a rudimentary set of bindings to enable you to build vue.js apps in F#
+You can take a look at he `fsharp` directory and if you run the app, you should also see the `src/fsharp` output
 
 ## Project Setup
 
@@ -20,16 +13,4 @@ bun install
 
 ```sh
 bun dev
-```
-
-### Compile and Minify for Production
-
-```sh
-bun run build
-```
-
-### Run Unit Tests with [Vitest](https://vitest.dev/)
-
-```sh
-bun test:unit
 ```
