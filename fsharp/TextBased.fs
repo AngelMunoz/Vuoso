@@ -7,13 +7,13 @@ open Fable.Vue
 
 // Using existing Vue components
 [<JSX.Component>]
-let TextBased (counter: VueRef<int>) =
-    let increment () = counter.value <- counter.value + 1
-    let decrement () = counter.value <- counter.value - 1
-    let reset () = counter.value <- 0
+let TextBased (counter: VueRef<int>) () =
+  let increment() = counter.value <- counter.value + 1
+  let decrement() = counter.value <- counter.value - 1
+  let reset() = counter.value <- 0
 
-    JSX.jsx
-        $"""
+  JSX.jsx
+    $"""
     <section>
         <p>This Component is defined using Fable JSX support (text based)</p>
         <p>Count: <span class="green bigger">{counter.value}</span></p>
@@ -22,11 +22,12 @@ let TextBased (counter: VueRef<int>) =
         <button onClick={reset}>Reset</button>
     </section>
     """
+  |> vuejsx
 
 // Component per "file" pattern
 let setup: SetupFunction<unit> =
-    fun () ->
-        let count = ref 0
-        fun () -> vuejsx (TextBased count)
+  fun () ->
+    let count = ref 0
+    TextBased count
 
-exportDefault (Component.Create(setup = setup))
+exportDefault(Component.Create(setup = setup))
