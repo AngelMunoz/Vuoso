@@ -9,7 +9,7 @@ open Fable.Vue
 let HelloWorld(msg: string) : VNode =
   importDefault "@/components/HelloWorld.vue"
 
-let App(count: VueRef<int>) =
+let App (count: VueRef<int>) () =
   let increment() = count.value <- count.value + 1
 
   h(
@@ -21,7 +21,7 @@ let App(count: VueRef<int>) =
       text "This is the Root component, defined in F#"
     ),
     h(
-      "p",
+      "div",
       text $"Count:",
       h(
         "span",
@@ -29,9 +29,9 @@ let App(count: VueRef<int>) =
           ``class`` = [| "green"; "bigger" |]
         |},
         number count.value
-      )
+      ),
+      h("button", {| onClick = fun () -> increment() |}, text "Increment")
     ),
-    h("button", {| onClick = fun () -> increment() |}, text "Increment"),
     h(HelloWorld("Hello Fable!"))
   )
 
@@ -41,6 +41,6 @@ let setup: SetupFunction<unit> =
     let count = ref 0
     provide("count", count)
 
-    fun () -> App(count)
+    App count
 
 exportDefault(Component.Create(setup = setup))

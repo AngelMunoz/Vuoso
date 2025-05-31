@@ -1,4 +1,3 @@
-[<AutoOpen>]
 module Fable.Vue
 
 open System
@@ -34,46 +33,65 @@ type Slots = Record<string, Slot>
 
 type SetupFunction<'Props> = 'Props -> (unit -> VNode)
 
+let private vh
+  (tag: string, props: 'Props option, children: VNode[] option)
+  : VNode =
+  import "h" "vue"
+
 
 [<Erase; AutoOpen>]
 type Vue =
 
-  static member h(tag: string) : VNode = importMember "vue"
-  static member h(tag: string, props: 'Props) : VNode = importMember "vue"
-  static member h(tag: string, children: VNode) : VNode = importMember "vue"
+  static member inline h(tag: string) : VNode = vh(tag, None, None)
 
-  static member h(tag: string, props: 'Props, children: VNode) : VNode =
-    importMember "vue"
+  static member inline h(tag: string, props: 'Props) : VNode =
+    vh(tag, Some props, None)
 
-  static member h(tag: string, [<ParamArray>] children: VNode[]) : VNode =
-    importMember "vue"
+  static member inline h(tag: string, children: VNode) : VNode =
+    vh(tag, None, Some [| children |])
 
-  static member h
+  static member inline h(tag: string, props: 'Props, children: VNode) : VNode =
+    vh(tag, Some props, Some [| children |])
+
+  static member inline h
+    (tag: string, [<ParamArray>] children: VNode[])
+    : VNode =
+    vh(tag, None, Some children)
+
+  static member inline h
     (tag: string, props: 'Props, [<ParamArray>] children: VNode[])
     : VNode =
-    importMember "vue"
+    vh(tag, Some props, Some children)
 
-  static member h(tag: string, children: Slot) : VNode = importMember "vue"
+  static member inline h(tag: string, children: Slot) : VNode =
+    vh(tag, None, Some(unbox children))
 
-  static member h(tag: string, props: 'Props, children: Slot) : VNode =
-    importMember "vue"
+  static member inline h(tag: string, props: 'Props, children: Slot) : VNode =
+    vh(tag, Some props, Some(unbox children))
 
-  static member h(tag: string, children: Slots) : VNode = importMember "vue"
+  static member inline h(tag: string, children: Slots) : VNode =
+    vh(tag, None, Some(unbox children))
 
-  static member h(tag: string, props: 'Props, children: Slots) : VNode =
-    importMember "vue"
+  static member inline h(tag: string, props: 'Props, children: Slots) : VNode =
+    vh(tag, Some props, Some(unbox children))
 
 
-  static member h(node: VNode) : VNode = importMember "vue"
-  static member h(node: VNode, children: Slot) : VNode = importMember "vue"
-  static member h(node: VNode, children: Slots) : VNode = importMember "vue"
-  static member h(node: VNode, props: 'Props) : VNode = importMember "vue"
+  static member inline h(node: VNode) : VNode = vh(unbox node, None, None)
 
-  static member h(node: VNode, props: 'Props, children: Slot) : VNode =
-    importMember "vue"
+  static member inline h(node: VNode, children: Slot) : VNode =
+    vh(unbox node, None, Some(unbox children))
 
-  static member h(node: VNode, props: 'Props, children: Slots) : VNode =
-    importMember "vue"
+  static member inline h(node: VNode, children: Slots) : VNode =
+    vh(unbox node, None, Some(unbox children))
+
+  static member inline h(node: VNode, props: 'Props) : VNode =
+    vh(unbox node, Some props, None)
+
+  static member inline h(node: VNode, props: 'Props, children: Slot) : VNode =
+    vh(unbox node, Some props, Some(unbox children))
+
+  static member inline h(node: VNode, props: 'Props, children: Slots) : VNode =
+    vh(unbox node, Some props, Some(unbox children))
 
   static member inject<'T>(key: string, ?defaultValue: 'T) : 'T =
     importMember "vue"
@@ -83,13 +101,14 @@ type Vue =
     : 'T =
     importMember "vue"
 
-  static member provide<'T>(key: string, value: 'T) : unit = importMember "vue"
 
-let text(content: string) : VNode = emitJsExpr content "$0"
-let number(content: float) : VNode = emitJsExpr content "$0"
-let boolean(content: bool) : VNode = emitJsExpr content "$0"
+let inline text(content: string) : VNode = emitJsExpr content "$0"
+let inline number(content: float) : VNode = emitJsExpr content "$0"
+let inline boolean(content: bool) : VNode = emitJsExpr content "$0"
 
-let vuejsx(content: JSX.Element) : VNode = unbox content
+let inline jsx(content: string) : VNode = unbox(JSX.jsx content)
+
+let provide<'T>(key: string, value: 'T) : unit = importMember "vue"
 
 let ref<'T>(initialValue: 'T) : VueRef<'T> = importMember "vue"
 

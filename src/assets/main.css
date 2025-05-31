@@ -1,7 +1,6 @@
-@import './base.css';
+@import "./base.css";
 
 #app {
-  max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   font-weight: normal;
@@ -25,15 +24,23 @@ a,
   }
 }
 
+button {
+  color: var(--color-text);
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  padding: 0.5rem 1rem;
+  border-radius: 0;
+}
+button:hover {
+  border: 1px solid var(--color-border-hover);
+}
+button:active {
+  background: var(--color-background-soft);
+}
+
 @media (min-width: 1024px) {
   body {
     display: flex;
     place-items: center;
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
   }
 }
