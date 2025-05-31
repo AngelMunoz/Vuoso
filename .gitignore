@@ -515,3 +515,4 @@ coverage
 *.tsbuildinfo
 
 **/*.fs.jsx
+**/*.fs.jsx.map
