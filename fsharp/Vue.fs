@@ -6,6 +6,13 @@ open System
 open Fable.Core
 open Fable.Core.JsInterop
 
+
+type Record<'Key, 'Value> =
+
+    [<Emit("$0[$1]")>]
+    abstract Item: key: 'Key -> 'Value with get, set
+
+
 type DebuggerEvent =
     abstract effect: obj
     abstract target: obj
@@ -18,14 +25,13 @@ type ErrorCapturedHook = (obj * obj * string) -> bool
 [<Erase>]
 type VueRef<'T> = { mutable value: 'T }
 
-[<Erase>]
 type VNode = interface end
 
-[<Erase>]
-type Slot = unit -> obj
+type Slot = obj -> VNode
 
-[<Erase>]
-type Slots = Map<string, Slot>
+type Slots = Record<string, Slot>
+
+type SetupFunction<'Props> = 'Props -> (unit -> VNode)
 
 [<Erase; AutoOpen>]
 type Vue =
@@ -38,6 +44,8 @@ type Vue =
 
     static member inject<'T>(key: string, ?defaultValue: 'T) : 'T = importMember "vue"
     static member inject<'T>(key: string, defaultValue: unit -> 'T, treatValueAsFactory: bool) : 'T = importMember "vue"
+
+    static member provide<'T>(key: string, value: 'T) : unit = importMember "vue"
 
 let ref<'T> (initialValue: 'T) : VueRef<'T> = importMember "vue"
 
@@ -54,14 +62,18 @@ let onRenderTriggered (callback: DebuggerHook) : unit = importMember "vue"
 let onActivated (callback: unit -> unit) : unit = importMember "vue"
 let onDeactivated (callback: unit -> unit) : unit = importMember "vue"
 
-
-
 [<Erase>]
-type Component<'Props> [<ParamObject; Emit "$0">] (?props: string[], ?setup: Func<'Props, unit -> VNode>) =
+type Component<'Props>
+    [<ParamObject; Emit "$0">]
+    (?props: string[], ?emits: string[], ?setup: Func<'Props, unit -> VNode>) =
 
     member val props: string[] = jsNative
     member val setup: Func<'Props, unit -> VNode> = jsNative
 
 
-    static member inline Create(setup: 'Props -> unit -> VNode, ?props: string seq) =
-        Component<'Props>(?props = (props |> Option.map Array.ofSeq), setup = Func<_, _> setup)
+    static member inline Create(setup: 'Props -> unit -> VNode, ?props: string seq, ?emits: string seq) =
+        Component<'Props>(
+            ?props = (props |> Option.map Array.ofSeq),
+            ?emits = (emits |> Option.map Array.ofSeq),
+            setup = Func<_, _> setup
+        )

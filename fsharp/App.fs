@@ -11,18 +11,20 @@ let HelloWorld (msg: string) : VNode =
 
 
 // Component per "file" pattern
-let setup () : unit -> VNode =
-    let count = ref 0
-    let increment () = count.value <- count.value + 1
-
+let setup: SetupFunction<unit> =
     fun () ->
-        h (
-            "div",
-            children =
-                [| h ("h1", children = "Hello, Vue!")
-                   h ("p", children = $"Count: {count.value}")
-                   h ("button", props = {| onClick = fun () -> increment () |}, children = "Increment")
-                   h (HelloWorld("Hello Fable!")) |]
-        )
+        let count = ref 0
+        let increment () = count.value <- count.value + 1
+        provide ("count", count)
+
+        fun () ->
+            h (
+                "div",
+                children =
+                    [| h ("h1", children = "Hello, Vue!")
+                       h ("p", children = $"Count: {count.value}")
+                       h ("button", props = {| onClick = fun () -> increment () |}, children = "Increment")
+                       h (HelloWorld("Hello Fable!")) |]
+            )
 
 exportDefault (Component.Create(setup = setup))
