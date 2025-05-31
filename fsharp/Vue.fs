@@ -36,11 +36,17 @@ type SetupFunction<'Props> = 'Props -> (unit -> VNode)
 [<Erase; AutoOpen>]
 type Vue =
 
-    static member h<'Props>(tag: string, ?props: 'Props, ?children: VNode) : VNode = importMember "vue"
-    static member h<'Props>(tag: string, ?props: 'Props, ?children: VNode[]) : VNode = importMember "vue"
-    static member h<'Props>(tag: string, ?props: 'Props, ?children: obj) : VNode = importMember "vue"
-    static member h<'Props>(tag: string, ?props: 'Props, ?children: obj[]) : VNode = importMember "vue"
+    static member h(tag: string, ?props: 'Props, ?children: VNode) : VNode = importMember "vue"
+    static member h(tag: string, ?props: 'Props, ?children: VNode[]) : VNode = importMember "vue"
+    static member h(tag: string, ?props: 'Props, ?children: Slot) : VNode = importMember "vue"
+    static member h(tag: string, ?props: 'Props, ?children: Slots) : VNode = importMember "vue"
     static member h(node: VNode) : VNode = importMember "vue"
+    static member h(node: VNode, ?children: Slot) : VNode = importMember "vue"
+    static member h(node: VNode, ?children: Slots) : VNode = importMember "vue"
+    static member h(node: VNode, ?props: 'Props, ?children: Slot) : VNode = importMember "vue"
+    static member h(node: VNode, ?props: 'Props, ?children: Slots) : VNode = importMember "vue"
+    static member h(tag: string, ?props: 'Props, ?children: obj) : VNode = importMember "vue"
+    static member h(tag: string, ?props: 'Props, ?children: obj[]) : VNode = importMember "vue"
 
     static member inject<'T>(key: string, ?defaultValue: 'T) : 'T = importMember "vue"
     static member inject<'T>(key: string, defaultValue: unit -> 'T, treatValueAsFactory: bool) : 'T = importMember "vue"
