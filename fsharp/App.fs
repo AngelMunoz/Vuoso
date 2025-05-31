@@ -9,22 +9,24 @@ open Fable.Vue
 let HelloWorld (msg: string) : VNode =
     importDefault "@/components/HelloWorld.vue"
 
+let App (count: VueRef<int>) =
+    let increment () = count.value <- count.value + 1
+
+    h (
+        "div",
+        {| id = "app" |},
+        h ("h1", {| ``class`` = "green" |}, text "This is the Root component, defined in F#"),
+        h ("p", None, text $"Count:", h ("span", {| ``class`` = [| "green"; "bigger" |] |}, number count.value)),
+        h ("button", {| onClick = fun () -> increment () |}, text "Increment"),
+        h (HelloWorld("Hello Fable!"))
+    )
 
 // Component per "file" pattern
 let setup: SetupFunction<unit> =
     fun () ->
         let count = ref 0
-        let increment () = count.value <- count.value + 1
         provide ("count", count)
 
-        fun () ->
-            h (
-                "div",
-                children =
-                    [| h ("h1", children = "Hello, Vue!")
-                       h ("p", children = $"Count: {count.value}")
-                       h ("button", props = {| onClick = fun () -> increment () |}, children = "Increment")
-                       h (HelloWorld("Hello Fable!")) |]
-            )
+        fun () -> App(count)
 
 exportDefault (Component.Create(setup = setup))

@@ -22,8 +22,9 @@ type DebuggerEvent =
 type DebuggerHook = DebuggerEvent -> unit
 type ErrorCapturedHook = (obj * obj * string) -> bool
 
-[<Erase>]
-type VueRef<'T> = { mutable value: 'T }
+
+type VueRef<'T> =
+    abstract value: 'T with get, set
 
 type VNode = interface end
 
@@ -33,25 +34,42 @@ type Slots = Record<string, Slot>
 
 type SetupFunction<'Props> = 'Props -> (unit -> VNode)
 
+
 [<Erase; AutoOpen>]
 type Vue =
 
-    static member h(tag: string, ?props: 'Props, ?children: VNode) : VNode = importMember "vue"
-    static member h(tag: string, ?props: 'Props, ?children: VNode[]) : VNode = importMember "vue"
-    static member h(tag: string, ?props: 'Props, ?children: Slot) : VNode = importMember "vue"
-    static member h(tag: string, ?props: 'Props, ?children: Slots) : VNode = importMember "vue"
+    static member h(tag: string) : VNode = importMember "vue"
+    static member h(tag: string, props: 'Props) : VNode = importMember "vue"
+    static member h(tag: string, children: VNode) : VNode = importMember "vue"
+    static member h(tag: string, props: 'Props, children: VNode) : VNode = importMember "vue"
+
+    static member h(tag: string, [<ParamArray>] children: VNode[]) : VNode = importMember "vue"
+    static member h(tag: string, props: 'Props, [<ParamArray>] children: VNode[]) : VNode = importMember "vue"
+
+    static member h(tag: string, children: Slot) : VNode = importMember "vue"
+    static member h(tag: string, props: 'Props, children: Slot) : VNode = importMember "vue"
+
+    static member h(tag: string, children: Slots) : VNode = importMember "vue"
+    static member h(tag: string, props: 'Props, children: Slots) : VNode = importMember "vue"
+
+
     static member h(node: VNode) : VNode = importMember "vue"
-    static member h(node: VNode, ?children: Slot) : VNode = importMember "vue"
-    static member h(node: VNode, ?children: Slots) : VNode = importMember "vue"
-    static member h(node: VNode, ?props: 'Props, ?children: Slot) : VNode = importMember "vue"
-    static member h(node: VNode, ?props: 'Props, ?children: Slots) : VNode = importMember "vue"
-    static member h(tag: string, ?props: 'Props, ?children: obj) : VNode = importMember "vue"
-    static member h(tag: string, ?props: 'Props, ?children: obj[]) : VNode = importMember "vue"
+    static member h(node: VNode, children: Slot) : VNode = importMember "vue"
+    static member h(node: VNode, children: Slots) : VNode = importMember "vue"
+    static member h(node: VNode, props: 'Props) : VNode = importMember "vue"
+    static member h(node: VNode, props: 'Props, children: Slot) : VNode = importMember "vue"
+    static member h(node: VNode, props: 'Props, children: Slots) : VNode = importMember "vue"
 
     static member inject<'T>(key: string, ?defaultValue: 'T) : 'T = importMember "vue"
     static member inject<'T>(key: string, defaultValue: unit -> 'T, treatValueAsFactory: bool) : 'T = importMember "vue"
 
     static member provide<'T>(key: string, value: 'T) : unit = importMember "vue"
+
+let text (content: string) : VNode = emitJsExpr content "$0"
+let number (content: float) : VNode = emitJsExpr content "$0"
+let boolean (content: bool) : VNode = emitJsExpr content "$0"
+
+let vuejsx (content: JSX.Element) : VNode = unbox content
 
 let ref<'T> (initialValue: 'T) : VueRef<'T> = importMember "vue"
 

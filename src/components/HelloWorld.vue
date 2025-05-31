@@ -1,12 +1,13 @@
 <script setup>
 import { inject } from "vue";
+import Counter from "@/fsharp/Counter.fs.jsx"
+import TextBased from "@/fsharp/TextBased.fs.jsx";
 defineProps({
   msg: {
     type: String,
     required: true,
   },
 });
-
 const count = inject("count");
 </script>
 
@@ -14,13 +15,13 @@ const count = inject("count");
   <div class="greetings">
     <h1 class="green">{{ msg }}</h1>
     <h3>
-      You’ve successfully created a project with
-      <a href="https://vite.dev/" target="_blank" rel="noopener">Vite</a> +
-      <a href="https://vuejs.org/" target="_blank" rel="noopener">Vue 3</a>.
+      <p>This is a .vue file component with it's "count" being injected from an F# vue render function.</p>
       <p>
-        Built in dependency injection! This comes from the Fable side:
-        {{ count }}
+        This comes from the Fable side:
+        <span class="green bigger">{{ count }}</span>
       </p>
+      <Counter :initial="100" />
+      <TextBased />
     </h3>
   </div>
 </template>
