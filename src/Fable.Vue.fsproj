@@ -4,10 +4,11 @@
     <TargetFramework>net9.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Vue.fs" />
-    <Compile Include="Counter.fs" />
-    <Compile Include="TextBased.fs" />
-    <Compile Include="App.fs" />
+    <Compile Include="./Vue.fs" />
+    <Compile Include="./components/Counter.fs" />
+    <Compile Include="./components/TextBased.fs" />
+    <Compile Include="./App.fs" />
+    <Compile Include="./Main.fs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Fable.Core" Version="4.5.0" />
