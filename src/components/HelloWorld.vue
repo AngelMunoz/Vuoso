@@ -1,7 +1,7 @@
 <script setup>
 import { inject } from "vue";
-import Counter from "@/fsharp/Counter.fs.jsx"
-import TextBased from "@/fsharp/TextBased.fs.jsx";
+import Counter from "./Counter.fs"
+import TextBased from "./TextBased.fs";
 defineProps({
   msg: {
     type: String,

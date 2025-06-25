@@ -27,13 +27,17 @@ type VueRef<'T> =
 
 type VNode = interface end
 
+type VApp = 
+  abstract mount : string -> unit
+
+
 type Slot = obj -> VNode
 
 type Slots = Record<string, Slot>
 
 type SetupFunction<'Props> = 'Props -> (unit -> VNode)
 
-let private vh
+let vh
   (tag: string, props: 'Props option, children: VNode[] option)
   : VNode =
   import "h" "vue"
@@ -41,6 +45,9 @@ let private vh
 
 [<Erase; AutoOpen>]
 type Vue =
+
+  static member inline createApp(app: obj) : VApp =
+      import "createApp" "vue"
 
   static member inline h(tag: string) : VNode = vh(tag, None, None)
 
